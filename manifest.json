@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "美佳タイプ自動記録",
+  "version": "1.0",
+  "description": "美佳タイプの記録を自動でTSV形式にしてクリップボードに保存します。",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://irespectakari.github.io/MIKATYPE_JAVASCRIPT/*",
+        "https://mikatype.github.io/MIKATYPE_JAVASCRIPT/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    }
+  ]
+}
