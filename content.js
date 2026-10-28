@@ -71,6 +71,9 @@
 
     const last = recordData[recordData.length - 1];
 
+    // 打鍵数 0 or 速度 0.0 の時、記録をスキップ
+    if(d == 0 || s == 0) return;
+
     // 重複記録を防ぐ
     // recordDataの末尾ではなく、独立した lastRecorded と比較する
     if (lastRecorded && lastRecorded.d == d && lastRecorded.s == s && lastRecorded.m == m) return;
