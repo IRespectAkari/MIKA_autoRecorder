@@ -4,6 +4,7 @@
 
   // 記録を保持する配列
   let recordData = [];
+  let lastRecorded = null; // 【追加】配列とは独立して「最後に記録したデータ」を保持する変数
 
   // ==========================================
   // 画面上に表示する通知パネル・リセットボタンの作成
@@ -40,6 +41,8 @@
   // リセットボタンが押された時の処理
   resetBtn.onclick = () => {
     recordData = [];
+    // ※ lastRecorded はリセットしない！
+    // これにより、現在表示中の結果が「新しい記録」として誤認されるのを防ぎます。
     statusText.innerText = '🔄 リセット済（次が第1回）';
     statusText.style.color = '#f1c40f'; // 黄色でリセットを強調
   };
@@ -69,9 +72,11 @@
     const last = recordData[recordData.length - 1];
 
     // 重複記録を防ぐ
-    if (last && last.d == d && last.s == s && last.m == m) return;
+    // recordDataの末尾ではなく、独立した lastRecorded と比較する
+    if (lastRecorded && lastRecorded.d == d && lastRecorded.s == s && lastRecorded.m == m) return;
 
     recordData.push({ d, s, m });
+    lastRecorded = { d, s, m };// 【追加】記録した内容で変数を更新
 
     // TSV形式に変換してクリップボードにコピー
     const tsv = recordData.map(x => `${x.d}\t${x.s}\t${x.m}`).join('\n');
