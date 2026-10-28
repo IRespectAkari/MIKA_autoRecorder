@@ -54,33 +54,33 @@
   // ==========================================
   function checkResult() {
     // 終了フラグが立ったかを検知
-    if (window.MIKA_practice_end_flag || window.MIKA_type_end_flag) {
-      const daken = window.MIKA_type_count;
-      const sokudo = window.MIKA_type_speed || window.MIKA_type_speed2;
-      const miss = window.MIKA_type_err_count;
+    if (!(window.MIKA_practice_end_flag || window.MIKA_type_end_flag)) return;
 
-      if (daken !== undefined && sokudo !== undefined && miss !== undefined) {
-        const d = String(daken);
-        const s = typeof sokudo === 'number' ? sokudo.toFixed(1) : String(sokudo);
-        const m = String(miss);
+    const daken = window.MIKA_type_count;
+    const sokudo = window.MIKA_type_speed || window.MIKA_type_speed2;
+    const miss = window.MIKA_type_err_count;
 
-        const last = recordData[recordData.length - 1];
+    if (daken == undefined || sokudo == undefined || miss == undefined) return;
 
-        // 重複記録を防ぐ
-        if (!last || last.d !== d || last.s !== s || last.m !== m) {
-          recordData.push({ d, s, m });
+    const d = String(daken);
+    const s = typeof sokudo === 'number' ? sokudo.toFixed(1) : String(sokudo);
+    const m = String(miss);
 
-          // TSV形式に変換してクリップボードにコピー
-          const tsv = recordData.map(x => `${x.d}\t${x.s}\t${x.m}`).join('\n');
-          navigator.clipboard.writeText(tsv).then(() => {
-            // パネルのテキストを更新
-            statusText.innerText = `📋 第${recordData.length}回 記録完了！（コピー済）`;
-            statusText.style.color = '#2ecc71'; // 成功時は緑色
-            console.log(`【拡張機能】第${recordData.length}回記録完了: 打鍵数=${d}, 速度=${s}, ミス=${m}`);
-          });
-        }
-      }
-    }
+    const last = recordData[recordData.length - 1];
+
+    // 重複記録を防ぐ
+    if (last && last.d == d && last.s == s && last.m == m) return;
+
+    recordData.push({ d, s, m });
+
+    // TSV形式に変換してクリップボードにコピー
+    const tsv = recordData.map(x => `${x.d}\t${x.s}\t${x.m}`).join('\n');
+    navigator.clipboard.writeText(tsv).then(() => {
+      // パネルのテキストを更新
+      statusText.innerText = `📋 第${recordData.length}回 記録完了！（コピー済）`;
+      statusText.style.color = '#2ecc71'; // 成功時は緑色
+      console.log(`【拡張機能】第${recordData.length}回記録完了: 打鍵数=${d}, 速度=${s}, ミス=${m}`);
+    });
   }
 
   // 0.5秒ごとに画面の状態を監視
